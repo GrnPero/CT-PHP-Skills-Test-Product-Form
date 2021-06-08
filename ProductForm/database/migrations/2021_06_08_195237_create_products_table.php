@@ -19,6 +19,7 @@ class CreateProductsTable extends Migration
             $table->integer('quantity');
             $table->double('price', 2);
             $table->dateTime('submitted');
+            $table->double('total', 2);
             $table->timestamps();
         });
     }

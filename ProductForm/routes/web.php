@@ -1,7 +1,8 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-
+// To use the ProductController class
+use App\Http\Controllers\ProductController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -13,6 +14,8 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+// Returns all Products
+Route::get('/', [ProductController::class, 'index']);
+
+// Adds product to the database
+Route::post('/addProduct', [ProductController::class, 'addProduct']);
