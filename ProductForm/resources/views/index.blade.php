@@ -38,7 +38,9 @@
                 <th scope="col">Total Value Number</th>
             </tr>
         </thead>
-        <tbody>
+        <tbody> 
+        <!-- From Laravel docs if the variable is null: https://laravel.com/docs/8.x/blade#if-statements --!>
+        @isset($products)
         @foreach($products as $product)
             <tr>
                 <th>{{ $product->name }}</th>
@@ -49,6 +51,19 @@
                 <td>${{ number_format($product->total, 2) }} </td>
             </tr>
         @endforeach
+        @endisset
+        </tbody>
+    </table>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th scoped="col">Sum Total</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <th>${{ number_format($total, 2) }}</th>
+            </tr>
         </tbody>
     </table>
 </body>
