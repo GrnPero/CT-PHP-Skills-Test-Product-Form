@@ -83,6 +83,8 @@
         let productTbody = document.getElementById('product-list');
 
         // Adds an event listener so we can submit the form without reloading the page using fetch post api
+        // The Async/Await code was from 2 online resources: https://stackoverflow.com/questions/50623279/js-event-handler-async-function/50623441 
+        // and https://www.freecodecamp.org/news/how-to-use-fetch-api/
         productButton.addEventListener('click', async () => {   
             // Prevents the page from reloading: https://stackoverflow.com/questions/19454310/stop-form-refreshing-page-on-submit
             event.preventDefault();
@@ -118,11 +120,12 @@
             });
 
             // Grabs the response from the controller
-            const productInfo = await response.json();
-            
+            const productInfo = await response.json(); 
             
             // Updates the total without reloading the page by grabbing the total from the response: https://www.w3schools.com/js/js_htmldom_html.asp
-            totalTh.innerHTML = productInfo.total;
+            // toFixed from: https://www.tutorialspoint.com/How-to-format-a-number-with-two-decimals-in-JavaScript
+            totalTh.innerHTML = "$"+(productInfo.total).toFixed(2);
+
             // Adds the new product to the page without reloading: https://www.w3schools.com/js/js_htmldom_nodes.asp
             let tr = document.createElement("tr");
             let th = document.createElement("th");
@@ -134,10 +137,20 @@
             let td3 = document.createElement("td");
             let td4 = document.createElement("td");
 
+
+            // To format the price and subtotal with 2 decimal places
+            let price = 0;            
+            price = productInfo[0].price;
+            price = price.toFixed(2);
+
+            let total = 0;
+            total = productInfo[0].total
+            total = total.toFixed(2); 
+
             let quantity = document.createTextNode(productInfo[0].quantity)
-            let price = document.createTextNode(productInfo[0].price);
+            price = document.createTextNode("$"+price);
             let submitted = document.createTextNode(productInfo[0].submitted);
-            let total = document.createTextNode(productInfo[0].total);
+            total = document.createTextNode("$"+total);
 
             // Appends the elements within eachother
             td1.appendChild(quantity); 
@@ -155,8 +168,7 @@
             tr.appendChild(td4);
             
             // Adds the element to the page
-            productTbody.appendChild(tr); 
-        
+            productTbody.appendChild(tr);  
         });
     </script>
 </body>
