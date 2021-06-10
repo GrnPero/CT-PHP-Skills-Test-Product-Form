@@ -38,6 +38,11 @@ class ProductController extends Controller
 
     // Adds the product to the database
     public function addProduct(Request $request) { 
+        // Prevents a glitch in which fetch sends null data
+        //if ($request->name == null) {
+            //return;
+        //}
+
         if (Storage::disk('local')->missing('products.json')) {
             // Grabs all the variables from the form
             $name = $request->input('name');
@@ -56,9 +61,9 @@ class ProductController extends Controller
                 'submitted' => now(),
                 'total' => ($price * $quantity)
             );
-            $products = json_encode(array($products)); 
+    
+            $products = json_encode(array($products));
 
-        
             // I learned how to save json files from laravel's documentation https://laravel.com/docs/8.x/filesystem#storing-files
             Storage::put('products.json', $products);
         } else {
@@ -88,17 +93,26 @@ class ProductController extends Controller
             $products = json_encode($products);
             Storage::put('products.json', $products);
         }
+        // Creates an array of products from the JSON file
+        $products = Storage::get('products.json');
+    
         
-        return back();
+        // Makes the json string readable for Laravel, I learned this from this article: https://hdtuto.com/article/how-to-read-and-write-json-file-in-php-laravel
+        $products = json_decode($products); 
+    
+        // To save the total of all products
+        $total = 0;
+
+        // Adds the total from the JSON array
+        foreach($products as $product) {
+            $total += $product->total;
+        }
+       
+        // Returns the newest product and total to update and add in the frontend: https://stackoverflow.com/questions/44067351/returning-multiple-json-from-controller-in-laravel 
+        return response()->json(array(
+            $product,
+            'total' => $total)
+        );
     }
 
-    // Updates the product to the database
-    public function updateProduct(Request $request, $id) {
-
-    }
-
-    // Deletes the product from the database
-    public function deleteProduct($id) {
-
-    }
 }
