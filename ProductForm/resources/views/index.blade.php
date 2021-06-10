@@ -83,7 +83,7 @@
         let productTbody = document.getElementById('product-list');
 
         // Adds an event listener so we can submit the form without reloading the page using fetch post api
-        productButton.addEventListener('click', function() {   
+        productButton.addEventListener('click', async () => {   
             // Prevents the page from reloading: https://stackoverflow.com/questions/19454310/stop-form-refreshing-page-on-submit
             event.preventDefault();
             
@@ -101,7 +101,7 @@
             }
 
             // Fetches the addProduct function and populates the request from the form
-            fetch('/addProduct', {
+            const response = await fetch('/addProduct', {
                 method: 'POST',
                 credentials: "same-origin",
                 headers: {
@@ -113,49 +113,50 @@
                 },
                 body: JSON.stringify(productData)
             })
-            .then(function(response) {
-                return response.json();
-            })
-            .then(function(productInfo) {
-                // Updates the total without reloading the page by grabbing the total from the response: https://www.w3schools.com/js/js_htmldom_html.asp
-                totalTh.innerHTML = productInfo.total;
-                // Adds the new product to the page without reloading: https://www.w3schools.com/js/js_htmldom_nodes.asp
-                let tr = document.createElement("tr");
-                let th = document.createElement("th");
-                let name = document.createTextNode(productInfo[0].name);
-
-                // Adds the rest of the columns
-                let td1 = document.createElement("td");
-                let td2 = document.createElement("td");
-                let td3 = document.createElement("td");
-                let td4 = document.createElement("td");
-
-                let quantity = document.createTextNode(productInfo[0].quantity)
-                let price = document.createTextNode(productInfo[0].price);
-                let submitted = document.createTextNode(productInfo[0].submitted);
-                let total = document.createTextNode(productInfo[0].total);
-
-                // Appends the elements within eachother
-                td1.appendChild(quantity); 
-                td2.appendChild(price);
-                td3.appendChild(submitted);
-                td4.appendChild(total);
-
-                th.appendChild(name);
-
-                // Adds the element to the DOM
-                tr.appendChild(th);
-                tr.appendChild(td1);
-                tr.appendChild(td2);
-                tr.appendChild(td3);
-                tr.appendChild(td4);
-            
-                // Adds the element to the page
-                productTbody.appendChild(tr);
-            })
             .catch(function(error) {
                 console.log('Error: ', error);
             });
+
+            // Grabs the response from the controller
+            const productInfo = await response.json();
+            
+            
+            // Updates the total without reloading the page by grabbing the total from the response: https://www.w3schools.com/js/js_htmldom_html.asp
+            totalTh.innerHTML = productInfo.total;
+            // Adds the new product to the page without reloading: https://www.w3schools.com/js/js_htmldom_nodes.asp
+            let tr = document.createElement("tr");
+            let th = document.createElement("th");
+            let name = document.createTextNode(productInfo[0].name);
+
+            // Adds the rest of the columns
+            let td1 = document.createElement("td");
+            let td2 = document.createElement("td");
+            let td3 = document.createElement("td");
+            let td4 = document.createElement("td");
+
+            let quantity = document.createTextNode(productInfo[0].quantity)
+            let price = document.createTextNode(productInfo[0].price);
+            let submitted = document.createTextNode(productInfo[0].submitted);
+            let total = document.createTextNode(productInfo[0].total);
+
+            // Appends the elements within eachother
+            td1.appendChild(quantity); 
+            td2.appendChild(price);
+            td3.appendChild(submitted);
+            td4.appendChild(total);
+
+            th.appendChild(name);
+
+            // Adds the element to the DOM
+            tr.appendChild(th);
+            tr.appendChild(td1);
+            tr.appendChild(td2);
+            tr.appendChild(td3);
+            tr.appendChild(td4);
+            
+            // Adds the element to the page
+            productTbody.appendChild(tr); 
+        
         });
     </script>
 </body>
