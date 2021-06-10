@@ -49,6 +49,7 @@ class ProductController extends Controller
             $quantity += $request->input('quantity');
             $price += $request->input('price');
 
+            // Creates an array then encodes it to json: https://www.php.net/manual/en/function.json-encode.php
             $products = array(
                 'name' => $name,
                 'quantity' => $quantity,
@@ -64,6 +65,7 @@ class ProductController extends Controller
         } else {
             // Creates an array of products from the JSON file
             $products = Storage::get('products.json');           
+            // Decodes the json to a php array
             $products = json_decode($products);
 
              // Grabs all the variables from the form
@@ -75,6 +77,7 @@ class ProductController extends Controller
             $quantity += $request->input('quantity');
             $price += $request->input('price');
 
+            // Turns an array to json: https://www.php.net/manual/en/function.json-encode.php
             $product = array(
                 'name' => $name,
                 'quantity' => $quantity,
@@ -83,10 +86,13 @@ class ProductController extends Controller
                 'total' => ($price * $quantity)
             );
 
+            // Pushes the newly creates array to the old array, https://www.php.net/manual/en/function.array-push.php
             array_push($products, $product);
             
+            // With the new array we encode it to a json string, https://www.php.net/manual/en/function.json-encode.php
             $products = json_encode($products);
             
+            // Replace the old json file to a new file with the array
             Storage::put('products.json', $products);
         }
         // Creates an array of products from the JSON file
