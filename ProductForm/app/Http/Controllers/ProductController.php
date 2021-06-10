@@ -18,7 +18,6 @@ class ProductController extends Controller
 
         // Creates an array of products from the JSON file
         $products = Storage::get('products.json');
-    
         
         // Makes the json string readable for Laravel, I learned this from this article: https://hdtuto.com/article/how-to-read-and-write-json-file-in-php-laravel
         $products = json_decode($products); 
@@ -38,11 +37,7 @@ class ProductController extends Controller
 
     // Adds the product to the database
     public function addProduct(Request $request) { 
-        // Prevents a glitch in which fetch sends null data
-        //if ($request->name == null) {
-            //return;
-        //}
-
+        // Checks if disk is empty create a new disk, if exist grabs all the data from the json file
         if (Storage::disk('local')->missing('products.json')) {
             // Grabs all the variables from the form
             $name = $request->input('name');
@@ -87,15 +82,15 @@ class ProductController extends Controller
                 'submitted' => now(),
                 'total' => ($price * $quantity)
             );
-            
+
             array_push($products, $product);
             
             $products = json_encode($products);
+            
             Storage::put('products.json', $products);
         }
         // Creates an array of products from the JSON file
         $products = Storage::get('products.json');
-    
         
         // Makes the json string readable for Laravel, I learned this from this article: https://hdtuto.com/article/how-to-read-and-write-json-file-in-php-laravel
         $products = json_decode($products); 
